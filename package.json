@@ -1,0 +1,30 @@
+{
+  "name": "cpmm-creator",
+  "author": "Rabnail",
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
+    "@raydium-io/raydium-sdk-v2": "0.1.115-alpha",
+    "@solana/spl-token": "^0.4.6",
+    "@solana/spl-token-metadata": "^0.1.6",
+    "@solana/web3.js": "^1.95.3",
+    "@types/jsonfile": "^6.1.4",
+    "@types/node-cron": "^3.0.11",
+    "axios": "^1.6.8",
+    "bs58": "^5.0.0",
+    "decimal.js": "^10.4.3",
+    "dotenv": "^16.4.7",
+    "form-data": "^4.0.0",
+    "jsonfile": "^6.1.0",
+    "node-cron": "^3.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.5",
+    "npm-check-updates": "^16.14.11"
+  },
+  "scripts": {
+    "start": "ts-node index.ts",
+    "build": "tsc"
+  }
+}

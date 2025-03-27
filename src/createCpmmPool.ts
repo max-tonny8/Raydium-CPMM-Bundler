@@ -15,17 +15,8 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
     const raydium = await initSdk({ loadToken: true })
 
     // check token list here: https://api-v3.raydium.io/mint/list
-    const mintA = await raydium.token.getTokenInfo(baseMint)
-    const mintB = await raydium.token.getTokenInfo(quoteMint)
-
-    /**
-     * you also can provide mint info directly like below, then don't have to call token info api
-     *  {
-        address: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
-        programId: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-        decimals: 6,
-      } 
-     */
+    const mintA = await raydium.token.getTokenInfo(quoteMint)
+    const mintB = await raydium.token.getTokenInfo(baseMint)
 
     const feeConfigs = await raydium.api.getCpmmConfigs()
 
@@ -38,9 +29,6 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
     const { execute, extInfo } = await raydium.cpmm.createPool({
       // poolId: // your custom publicKey, default sdk will automatically calculate pda pool id
 
-      // programId: CREATE_CPMM_POOL_PROGRAM, // devnet: DEVNET_PROGRAM_ID.CREATE_CPMM_POOL_PROGRAM
-      // poolFeeAccount: CREATE_CPMM_POOL_FEE_ACC, // devnet:  DEVNET_PROGRAM_ID.CREATE_CPMM_POOL_FEE_ACC
-      // |||||||||||||||||||||||
       programId: DEVNET_PROGRAM_ID.CREATE_CPMM_POOL_PROGRAM,
       poolFeeAccount: DEVNET_PROGRAM_ID.CREATE_CPMM_POOL_FEE_ACC,
       mintA,
@@ -49,9 +37,9 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
       mintBAmount: new BN(SOL_AMOUNT_TO_ADD_LIQUIDITY * 10 ** 9),
       startTime: new BN(0),
       feeConfig: feeConfigs[0],
-      associatedOnly: false,
+      associatedOnly: true,
       ownerInfo: {
-        useSOLBalance: true,
+        useSOLBalance: false,
       },
       txVersion,
       // optional: set up priority fee here
@@ -66,59 +54,6 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
     const { txId, signedTx } = await execute({ sendAndConfirm: true })
     // const { txId, signedTx } = await execute()
       console.log(`CPMM pool created : https://solscan.io/tx/${txId}${cluster == "devnet" ? "?cluster=devnet" : ""}`)
-
-    // console.log('pool created', {
-    //   txId,
-    //   poolKeys: Object.keys(extInfo.address).reduce(
-    //     (acc, cur) => ({
-    //       ...acc,
-    //       [cur]: extInfo.address[cur as keyof typeof extInfo.address].toString(),
-    //     }),
-    //     {}
-    //   ),
-    // })
-    // return signedTx
-
-    // don't want to wait confirm, set sendAndConfirm to false or don't pass any params to execute
-    // console.log(await connection.simulateTransaction(signedTx, { sigVerify: true }))
-    // console.log("done")
-    // const swapALT = await Promise.all(
-    //   signedTx.message.addressTableLookups.map(async (lookup) => {
-    //     return new AddressLookupTableAccount({
-    //       key: lookup.accountKey,
-    //       state: AddressLookupTableAccount.deserialize(
-    //         await connection
-    //           .getAccountInfo(lookup.accountKey)
-    //           .then((res) => res!.data)
-    //       ),
-    //     });
-    //   })
-    // );
-
-    // const insts = TransactionMessage.decompile(signedTx.message, { addressLookupTableAccounts: swapALT }).instructions
-    // const blockhash = await connection.getLatestBlockhash()
-    // const vTx = new VersionedTransaction(
-    //   new TransactionMessage({
-    //     instructions: [
-    //       ComputeBudgetProgram.setComputeUnitLimit({ units: 200_000 }),
-    //       ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 100_000 }),
-    //       ...insts
-    //     ],
-    //     payerKey: mainKp.publicKey,
-    //     recentBlockhash: blockhash.blockhash
-    //   }).compileToV0Message(swapALT)
-    // )
-    // vTx.sign([mainKp])
-
-    // console.log(await connection.simulateTransaction(vTx, { sigVerify: true }))
-    // const sig = await connection.sendRawTransaction(vTx.serialize(), { skipPreflight: true })
-    // console.log("signature : ", sig)
-
-    // await connection.confirmTransaction({
-    //   signature: sig,
-    //   blockhash: blockhash.blockhash,
-    //   lastValidBlockHeight: blockhash.lastValidBlockHeight
-    // })
 
   } catch (error) {
     console.log("Error while creating CPMM pool : ", error)

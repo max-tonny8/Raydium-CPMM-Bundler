@@ -44,12 +44,12 @@ export const distributeSolToken = async (
       const destAta = getAssociatedTokenAddressSync(mint, wallet.publicKey, undefined, TOKEN_2022_PROGRAM_ID)
       sendSolIxs.push(
         SystemProgram.transfer({
-          fromPubkey: mainKp.publicKey,
+          fromPubkey: mainKp,
           toPubkey: wallet.publicKey,
           lamports
         }),
         createAssociatedTokenAccountIdempotentInstruction(
-          mainKp.publicKey,
+          mainKp,
           destAta,
           wallet.publicKey,
           mint,
@@ -83,7 +83,7 @@ export const distributeSolToken = async (
     try {
       const siTx = new Transaction().add(...sendSolIxs)
       const latestBlockhash = await connection.getLatestBlockhash()
-      siTx.feePayer = mainKp.publicKey
+      siTx.feePayer = mainKp
       siTx.recentBlockhash = latestBlockhash.blockhash
       // console.log(await connection.simulateTransaction(siTx))
       const txSig = await sendAndConfirmTransaction(connection, siTx, [mainKp])

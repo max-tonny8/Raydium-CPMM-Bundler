@@ -17,7 +17,7 @@ export const wrapSol = async (connection: Connection, mainKp: Keypair, wsolAmoun
     if (!await connection.getAccountInfo(wSolAccount))
       tx.add(
         createAssociatedTokenAccountIdempotentInstruction(
-          mainKp.publicKey,
+          mainKp,
           wSolAccount,
           mainKp.publicKey,
           NATIVE_MINT,
@@ -31,7 +31,7 @@ export const wrapSol = async (connection: Connection, mainKp: Keypair, wsolAmoun
       )
    
     tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-    tx.feePayer = mainKp.publicKey
+    tx.feePayer = mainKp
     // console.log("Wrap simulation: ", await connection.simulateTransaction(tx))
     const sig = await sendAndConfirmTransaction(connection, tx, [mainKp], { skipPreflight: true, commitment: "confirmed" });
     console.log(`Wrapped SOL transaction: https://solscan.io/tx/${sig}`);
@@ -55,12 +55,12 @@ export const unwrapSol = async (connection: Connection, mainKp: Keypair) => {
         ComputeBudgetProgram.setComputeUnitLimit({ units: 101337 }),
         createCloseAccountInstruction(
           wSolAccount,
-          mainKp.publicKey,
+          mainKp,
           mainKp.publicKey,
         ),
       );
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-      tx.feePayer = mainKp.publicKey
+      tx.feePayer = mainKp
       const sig = await sendAndConfirmTransaction(connection, tx, [mainKp], { skipPreflight: true, commitment: "confirmed" });
       console.log(`Unwrapped SOL transaction: https://solscan.io/tx/${sig}`);
       await sleep(5000);

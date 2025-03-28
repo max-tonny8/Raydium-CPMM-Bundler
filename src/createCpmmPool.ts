@@ -11,6 +11,7 @@ import { SOL_AMOUNT_TO_ADD_LIQUIDITY, TOKEN_AMOUNT_TO_ADD_LIQUIDITY } from '../c
 import { createAssociatedTokenAccountIdempotentInstruction, createSyncNativeInstruction, getAssociatedTokenAddressSync, NATIVE_MINT } from '@solana/spl-token'
 
 export const createPoolTx = async (connection: Connection, mainKp: Keypair, baseMint: PublicKey, quoteMint: PublicKey) => {
+<<<<<<< HEAD
   console.log("🚀 ~ createPoolTx ~ baseMint:", baseMint)
   console.log("🚀 ~ createPoolTx ~ quoteMint:", quoteMint)
   try {
@@ -131,6 +132,9 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
   } catch (error) {
     console.log("Error while creating CPMM pool : ", error)
   }
+=======
+  
+>>>>>>> aaa89a3697f38c6bef259e1eebd711f76d6e2caa
 }
 
 /** uncomment code below to execute */

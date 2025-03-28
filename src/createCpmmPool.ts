@@ -11,15 +11,11 @@ import { SOL_AMOUNT_TO_ADD_LIQUIDITY, TOKEN_AMOUNT_TO_ADD_LIQUIDITY } from '../c
 import { createAssociatedTokenAccountIdempotentInstruction, createSyncNativeInstruction, getAssociatedTokenAddressSync, NATIVE_MINT } from '@solana/spl-token'
 
 export const createPoolTx = async (connection: Connection, mainKp: Keypair, baseMint: PublicKey, quoteMint: PublicKey) => {
-<<<<<<< HEAD
-  console.log("🚀 ~ createPoolTx ~ baseMint:", baseMint)
-  console.log("🚀 ~ createPoolTx ~ quoteMint:", quoteMint)
   try {
     const raydium = await initSdk({ loadToken: true })
 
     // check token list here: https://api-v3.raydium.io/mint/list
     const mintA = await raydium.token.getTokenInfo(baseMint)
-    console.log("🚀 ~ createPoolTx ~ mintA:", mintA)
     const mintB = await raydium.token.getTokenInfo(quoteMint)
 
     /**
@@ -49,7 +45,6 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
       poolFeeAccount: DEVNET_PROGRAM_ID.CREATE_CPMM_POOL_FEE_ACC,
       mintA,
       mintB,
-      feePayer: mainKp.publicKey,
       mintAAmount: new BN(Math.floor(TOKEN_AMOUNT_TO_ADD_LIQUIDITY)).mul(new BN(10 ** mintA.decimals)),
       mintBAmount: new BN(SOL_AMOUNT_TO_ADD_LIQUIDITY * 10 ** 9),
       startTime: new BN(0),
@@ -65,17 +60,13 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
         microLamports: 100000,
       },
     })
-
+  
     // don't want to wait confirm, set sendAndConfirm to false or don't pass any params to execute
     console.log("info ", extInfo.address)
-    // Execute the transaction
-    const result = await execute({ sendAndConfirm: true })
+    const { txId, signedTx } = await execute({ sendAndConfirm: true })
+    // const { txId, signedTx } = await execute()
+      console.log(`CPMM pool created : https://solscan.io/tx/${txId}${cluster == "devnet" ? "?cluster=devnet" : ""}`)
 
-    if (result) {
-      const { txId, signedTx } = result
-      console.log(`CPMM pool created: https://solscan.io/tx/${txId}${cluster == "devnet" ? "?cluster=devnet" : ""}`)
-      return { txId, signedTx }
-    }
     // console.log('pool created', {
     //   txId,
     //   poolKeys: Object.keys(extInfo.address).reduce(
@@ -132,9 +123,6 @@ export const createPoolTx = async (connection: Connection, mainKp: Keypair, base
   } catch (error) {
     console.log("Error while creating CPMM pool : ", error)
   }
-=======
-  
->>>>>>> aaa89a3697f38c6bef259e1eebd711f76d6e2caa
 }
 
 /** uncomment code below to execute */

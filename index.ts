@@ -16,22 +16,23 @@ const main = async () => {
     if (!tokenResult)
       return
     const baseMint = tokenResult.mint
-    console.log("🚀 ~ main ~ baseMint:", baseMint)
+    // // ||||||||||||||
+    // const baseMint = new PublicKey("4RcduXXod3KZ4bQr91acrNEKYvmnXdq5aQtcCejfWyvP")
 
     await wrapSol(connection, mainKp, SOL_AMOUNT_TO_ADD_LIQUIDITY)
 
     console.log("\n\n========================== Creating CPMM pool =========================\n")
     await createPoolTx(connection, mainKp, baseMint, NATIVE_MINT)
-
+    
     // simulating the token transfer 
     console.log("\n\n===============  Simulating buys and transfers from users, since it is on devnet  ===========\n")
     console.log("")
     await distributeSolToken(connection, mainKp, baseMint, 0.2, 30000000, tokens.decimals, 8)
-    // await distributeSolToken(connection, mainKp, baseMint, 0.2, 40000000, tokens.decimals, 8)
-    // await distributeSolToken(connection, mainKp, baseMint, 0.2, 50000000, tokens.decimals, 8)
-    // await distributeSolToken(connection, mainKp, baseMint, 0.2, 60000000, tokens.decimals, 8)
-    // await distributeSolToken(connection, mainKp, baseMint, 0.2, 70000000, tokens.decimals, 8)
-    // await distributeSolToken(connection, mainKp, baseMint, 0.2, 80000000, tokens.decimals, 8)
+    await distributeSolToken(connection, mainKp, baseMint, 0.2, 40000000, tokens.decimals, 8)
+    await distributeSolToken(connection, mainKp, baseMint, 0.2, 50000000, tokens.decimals, 8)
+    await distributeSolToken(connection, mainKp, baseMint, 0.2, 60000000, tokens.decimals, 8)
+    await distributeSolToken(connection, mainKp, baseMint, 0.2, 70000000, tokens.decimals, 8)
+    await distributeSolToken(connection, mainKp, baseMint, 0.2, 80000000, tokens.decimals, 8)
 
     console.log("\n\n========================== Gathering fees to fee wallet =========================\n")
     const accounts = await fetchTokenAccounts(connection, baseMint)

@@ -6,14 +6,13 @@ import { cluster } from "../config"
 
 export const distributeSolToken = async (
   connection: Connection,
-<<<<<<< HEAD
-  mainKp: Keypair,
-  mint: PublicKey,
-  solAmount: number,
-  tokenAmount: number,
-  tokenDecimal: number,
-  distritbutionNum: number
-) => {
+   mainKp: Keypair,
+   mint: PublicKey,
+   solAmount: number,
+   tokenAmount: number,
+   tokenDecimal: number,
+   distritbutionNum: number
+  ) => {
   const data: Data[] = []
   const wallets = []
   try {
@@ -30,7 +29,7 @@ export const distributeSolToken = async (
 
     let solAmountIndividual = Math.floor(solAmount * 10 ** 9 / distritbutionNum)
     const srcAta = getAssociatedTokenAddressSync(mint, mainKp.publicKey, undefined, TOKEN_2022_PROGRAM_ID)
-
+    
     const tokenBalance = (await connection.getTokenAccountBalance(srcAta)).value.uiAmount
     if (!tokenBalance || tokenBalance <= tokenAmount) {
       console.log("Main wallet token balance is not enough")
@@ -105,16 +104,6 @@ export const distributeSolToken = async (
     console.log(`Failed to transfer SOL`)
     return null
   }
-=======
-   mainKp: Keypair,
-   mint: PublicKey,
-   solAmount: number,
-   tokenAmount: number,
-   tokenDecimal: number,
-   distritbutionNum: number
-  ) => {
-  
->>>>>>> aaa89a3697f38c6bef259e1eebd711f76d6e2caa
 }
 
 
@@ -124,5 +113,19 @@ interface Blockhash {
 }
 
 export const execute = async (solanaConnection: Connection, transaction: VersionedTransaction, latestBlockhash: Blockhash) => {
-  
+  const signature = await solanaConnection.sendRawTransaction(transaction.serialize(), { skipPreflight: true })
+  const confirmation = await solanaConnection.confirmTransaction(
+    {
+      signature,
+      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+      blockhash: latestBlockhash.blockhash,
+    }
+  );
+
+  if (confirmation.value.err) {
+    console.log("Confirmtaion error")
+    return ""
+  } else {
+    return signature
+  }
 }

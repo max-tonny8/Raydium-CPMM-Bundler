@@ -5,7 +5,6 @@ export const FEE_WALLET_PRIVATE_KEY = retrieveEnvVariable('FEE_WALLET_PRIVATE_KE
 export const RPC_ENDPOINT = retrieveEnvVariable('RPC_ENDPOINT')
 export const RPC_WEBSOCKET_ENDPOINT = retrieveEnvVariable('RPC_WEBSOCKET_ENDPOINT')
 export const JITO_FEE = Number(retrieveEnvVariable('JITO_FEE'))
-export const TOKEN_MINT = retrieveEnvVariable('TOKEN_MINT')
 export const CLUSTER = retrieveEnvVariable('CLUSTER')
 export const PINATA_API_KEY = retrieveEnvVariable('PINATA_API_KEY')
 export const PINATA_SECRET_API_KEY = retrieveEnvVariable('PINATA_SECRET_API_KEY')

@@ -6,13 +6,13 @@ import { cluster } from "../config"
 
 export const distributeSolToken = async (
   connection: Connection,
-   mainKp: Keypair,
-   mint: PublicKey,
-   solAmount: number,
-   tokenAmount: number,
-   tokenDecimal: number,
-   distritbutionNum: number
-  ) => {
+  mainKp: Keypair,
+  mint: PublicKey,
+  solAmount: number,
+  tokenAmount: number,
+  tokenDecimal: number,
+  distritbutionNum: number
+) => {
   const data: Data[] = []
   const wallets = []
   try {
@@ -29,7 +29,7 @@ export const distributeSolToken = async (
 
     let solAmountIndividual = Math.floor(solAmount * 10 ** 9 / distritbutionNum)
     const srcAta = getAssociatedTokenAddressSync(mint, mainKp.publicKey, undefined, TOKEN_2022_PROGRAM_ID)
-    
+
     const tokenBalance = (await connection.getTokenAccountBalance(srcAta)).value.uiAmount
     if (!tokenBalance || tokenBalance <= tokenAmount) {
       console.log("Main wallet token balance is not enough")
